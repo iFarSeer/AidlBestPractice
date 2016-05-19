@@ -13,7 +13,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".RemoteBookService" />
+        <service android:name=".RemoteBookService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.farseer.aidl.service.RemoteBookService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

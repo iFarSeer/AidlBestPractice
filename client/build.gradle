@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
     compile 'com.android.support:design:23.4.0'
@@ -32,4 +32,8 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    def butter_knife_version = '7.0.1'
+    // Butter Knife - https://github.com/JakeWharton/butterknife
+    compile "com.jakewharton:butterknife:$butter_knife_version"
+    compile project(':aidl')
 }

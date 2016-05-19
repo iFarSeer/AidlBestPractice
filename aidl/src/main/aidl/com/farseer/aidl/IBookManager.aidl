@@ -8,5 +8,5 @@ interface IBookManager {
 
     List<Book> getBookList();
 
-    void addBook(Book book);
+    void addBook(in Book book);
 }
