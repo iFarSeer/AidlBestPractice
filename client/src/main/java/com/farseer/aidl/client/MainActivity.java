@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.farseer.aidl.Book;
 import com.farseer.aidl.IBookManager;
+import com.farseer.aidl.OnBookListChangedListener;
 import com.farseer.aidl.ServiceIntentConvertor;
 
 import java.util.List;
@@ -46,11 +47,22 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.e(TAG, "onServiceConnected");
             bookManager = IBookManager.Stub.asInterface(service);
+            linkToDeath(service);
+            registerChangedListener();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.e(TAG, "onServiceDisconnected");
+            bookManager = null;
+        }
+    };
+
+    private OnBookListChangedListener changedListener = new OnBookListChangedListener.Stub() {
+
+        @Override
+        public void onBookListChanged(Book book) throws RemoteException {
+            Log.i(TAG, "onBookListChanged:book = " + book.toString());
         }
     };
 
@@ -97,7 +109,11 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.unbindService)
     public void unbindService() {
-        unbindService(serviceConnection);
+        unregisterChangedListener();
+        if (bookManager != null) {
+            unbindService(serviceConnection);
+        }
+        bookManager = null;
     }
 
     @OnClick(R.id.addBook)
@@ -106,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
         Book book = new Book(bookId, getString(R.string.format_book_name, bookId));
 
         try {
-            bookManager.addBook(book);
+            if (bookManager != null) {
+                bookManager.addBook(book);
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
             Log.e(TAG, "addBook failed");
@@ -117,11 +135,13 @@ public class MainActivity extends AppCompatActivity {
     public void listBook() {
 
         try {
-            List<Book> bookList = bookManager.getBookList();
+            if (bookManager != null) {
+                List<Book> bookList = bookManager.getBookList();
 
-            if (bookList != null) {
-                for (Book book : bookList) {
-                    Log.i(TAG, book.toString());
+                if (bookList != null) {
+                    for (Book book : bookList) {
+                        Log.i(TAG, book.toString());
+                    }
                 }
             }
         } catch (RemoteException e) {
@@ -130,5 +150,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //为Binder设置死亡代理,当Binder死亡,DeathRecipient收到通知,客户端重连服务
+    private void linkToDeath(IBinder binder) {
+        try {
+            binder.linkToDeath(new IBinder.DeathRecipient() {
+                @Override
+                public void binderDied() {
+                    bindService();
+                }
+            }, 0);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
+
+    //注册变化监听
+    private void registerChangedListener() {
+        try {
+            if (bookManager != null) {
+                bookManager.registerChangedListener(changedListener);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //注销变化监听
+    private void unregisterChangedListener() {
+        try {
+            if (bookManager != null && bookManager.asBinder().isBinderAlive()) {
+                bookManager.unregisterChangedListener(changedListener);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 }
