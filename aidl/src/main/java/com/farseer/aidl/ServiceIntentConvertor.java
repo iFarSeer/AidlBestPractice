@@ -18,8 +18,10 @@ import java.util.List;
 public class ServiceIntentConvertor {
 
     /**
-     * 把Implicit的Intent转化为Explicit的Intent
+     * 把Implicit的Intent转化为Explicit的Intent.
      *
+     * @param context  context
+     * @param implicitIntent implicitIntent
      * @return intent
      */
     public static Intent convertImplicitExplicitIntent(Context context, Intent implicitIntent) {

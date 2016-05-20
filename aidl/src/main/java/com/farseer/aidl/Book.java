@@ -15,6 +15,12 @@ public class Book implements Parcelable {
     private int bookId;
     private String bookName;
 
+    /**
+     * Book的构造方法.
+     *
+     * @param bookId   bookId
+     * @param bookName bookName
+     */
     public Book(int bookId, String bookName) {
         this.bookId = bookId;
         this.bookName = bookName;
@@ -50,9 +56,12 @@ public class Book implements Parcelable {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "bookId=" + bookId +
-                ", bookName='" + bookName + '\'' +
-                '}';
+        return "Book{"
+                + "bookId="
+                + bookId
+                + ", bookName='"
+                + bookName
+                + '\''
+                + "}";
     }
 }
