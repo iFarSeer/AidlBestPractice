@@ -1,10 +1,5 @@
 package com.farseer.aidl.client;
 
-import com.farseer.aidl.Book;
-import com.farseer.aidl.IBookManager;
-import com.farseer.aidl.OnBookListChangedListener;
-import com.farseer.aidl.ServiceIntentConvertor;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,13 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.List;
-import java.util.Random;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.farseer.aidl.Book;
+import com.farseer.aidl.IBookManager;
+import com.farseer.aidl.OnBookListChangedListener;
+import com.farseer.aidl.ServiceIntentConvertor;
+
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -93,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 绑定服务.
+     */
     @OnClick(R.id.bindService)
     public void bindService() {
         String action = "com.farseer.aidl.service.RemoteBookService";
@@ -101,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    /**
+     * 解绑服务.
+     */
     @OnClick(R.id.unbindService)
     public void unbindService() {
         unregisterChangedListener();
@@ -110,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
         bookManager = null;
     }
 
+    /**
+     * 添加Book.
+     */
     @OnClick(R.id.addBook)
     public void addBook() {
         int bookId = random.nextInt(1000);
@@ -119,11 +126,15 @@ public class MainActivity extends AppCompatActivity {
             if (bookManager != null) {
                 bookManager.addBook(book);
             }
-        } catch (RemoteException e) {
+        } catch (RemoteException exception) {
+            Log.e(TAG, exception.getMessage());
             Log.e(TAG, "addBook failed");
         }
     }
 
+    /**
+     * 获得Book List.
+     */
     @OnClick(R.id.listBook)
     public void listBook() {
 
@@ -137,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
+        } catch (RemoteException exception) {
+            Log.e(TAG, exception.getMessage());
             Log.e(TAG, "getBookList failed");
         }
     }
@@ -152,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
                     bindService();
                 }
             }, 0);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
+        } catch (RemoteException exception) {
+            Log.e(TAG, exception.getMessage());
         }
     }
 
@@ -164,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
             if (bookManager != null) {
                 bookManager.registerChangedListener(changedListener);
             }
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
+        } catch (RemoteException exception) {
+            Log.e(TAG, exception.getMessage());
         }
     }
 
@@ -175,8 +186,8 @@ public class MainActivity extends AppCompatActivity {
             if (bookManager != null && bookManager.asBinder().isBinderAlive()) {
                 bookManager.unregisterChangedListener(changedListener);
             }
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
+        } catch (RemoteException exception) {
+            Log.e(TAG, exception.getMessage());
         }
     }
 }
