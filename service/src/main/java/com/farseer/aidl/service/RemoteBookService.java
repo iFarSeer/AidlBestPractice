@@ -16,9 +16,7 @@
 
 package com.farseer.aidl.service;
 
-import com.farseer.aidl.DevBook;
-import com.farseer.aidl.IBookManager;
-import com.farseer.aidl.OnBookListChangedListener;
+import com.farseer.aidl.*;
 
 import android.app.Service;
 import android.content.Intent;
@@ -60,6 +58,24 @@ public class RemoteBookService extends Service {
             Log.i(TAG, "addBook book = " + book.toString());
             bookList.add(book);
             notifyChanged(book);
+        }
+
+        @Override
+        public void getBook(int bookId, OnRequestBookCallback callback) throws RemoteException {
+
+            if (bookList.size() == 0) {
+                callback.onFailed(ResultCode.GET_BOOK_EMPTY_LIST);
+                return;
+            }
+
+            for (DevBook book : bookList) {
+                if (book.getBookId() == bookId) {
+                    callback.onSuccess(book);
+                    return;
+                }
+            }
+
+            callback.onFailed(ResultCode.GET_BOOK_NONE);
         }
 
         @Override

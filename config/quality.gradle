@@ -25,7 +25,7 @@ findbugs {
 }
 
 
-task findbugs(type: FindBugs, dependsOn: assembleDebug) {
+task findbugs(type: FindBugs) {
     ignoreFailures = false
     reportLevel = "high"
     effort = "max"

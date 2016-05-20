@@ -19,6 +19,7 @@
     <string name="action_settings">Settings</string>
     <string name="text_add_book">Add Book</string>
     <string name="text_list_book">List Book</string>
+    <string name="text_get_book">Get Book</string>
     <string name="text_bind_service">Bind Service</string>
     <string name="text_unbind_service">Unbind Service</string>
 

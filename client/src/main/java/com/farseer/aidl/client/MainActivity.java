@@ -31,10 +31,7 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.farseer.aidl.DevBook;
-import com.farseer.aidl.IBookManager;
-import com.farseer.aidl.OnBookListChangedListener;
-import com.farseer.aidl.ServiceIntentConvertor;
+import com.farseer.aidl.*;
 
 import java.util.List;
 import java.util.Random;
@@ -73,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "onBookListChanged:book = " + book.toString());
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
      */
     @OnClick(R.id.listBook)
     public void listBook() {
-
         try {
             if (bookManager != null) {
                 List<DevBook> bookList = bookManager.getBookList();
@@ -163,6 +160,33 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, book.toString());
                     }
                 }
+            }
+        } catch (RemoteException exception) {
+            Log.e(TAG, exception.getMessage());
+            Log.e(TAG, "getBookList failed");
+        }
+    }
+
+    /**
+     * 获得Book
+     */
+    @OnClick(R.id.getBook)
+    public void getBook() {
+        try {
+            if (bookManager != null) {
+                int bookId = random.nextInt(4);
+                OnRequestBookCallback callback = new OnRequestBookCallback.Stub() {
+                    @Override
+                    public void onSuccess(DevBook book) throws RemoteException {
+                        Log.i(TAG, "找书成功:book = " + book.toString());
+                    }
+
+                    @Override
+                    public void onFailed(int code) throws RemoteException {
+                        Log.i(TAG, "找书失败: code = " + code);
+                    }
+                };
+                bookManager.getBook(bookId, callback);
             }
         } catch (RemoteException exception) {
             Log.e(TAG, exception.getMessage());
