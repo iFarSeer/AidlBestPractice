@@ -1,12 +1,22 @@
 /*
- * RemoteBookService      2016-05-19
- * Copyright (c) 2016 hujiang Co.Ltd. All right reserved(http://www.hujiang.com).
- * 
+ *    Copyright 2016 ifarseer
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 
 package com.farseer.aidl.service;
 
-import com.farseer.aidl.Book;
+import com.farseer.aidl.DevBook;
 import com.farseer.aidl.IBookManager;
 import com.farseer.aidl.OnBookListChangedListener;
 
@@ -33,20 +43,20 @@ public class RemoteBookService extends Service {
 
     private static final String TAG = RemoteBookService.class.getSimpleName();
 
-    private CopyOnWriteArrayList<Book> bookList = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<DevBook> bookList = new CopyOnWriteArrayList<>();
 
     private RemoteCallbackList<OnBookListChangedListener> changedListenerList = new RemoteCallbackList<>();
 
     private Binder binder = new IBookManager.Stub() {
 
         @Override
-        public List<Book> getBookList() throws RemoteException {
+        public List<DevBook> getBookList() throws RemoteException {
             Log.i(TAG, "getBookList success");
             return bookList;
         }
 
         @Override
-        public void addBook(Book book) throws RemoteException {
+        public void addBook(DevBook book) throws RemoteException {
             Log.i(TAG, "addBook book = " + book.toString());
             bookList.add(book);
             notifyChanged(book);
@@ -66,8 +76,8 @@ public class RemoteBookService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        bookList.add(new Book(1001, "解忧杂货店"));
-        bookList.add(new Book(1002, "呼兰河传"));
+        bookList.add(new DevBook(1001, "解忧杂货店"));
+        bookList.add(new DevBook(1002, "呼兰河传"));
     }
 
     @Nullable
@@ -76,7 +86,7 @@ public class RemoteBookService extends Service {
         return binder;
     }
 
-    private void notifyChanged(Book book) {
+    private void notifyChanged(DevBook book) {
         int count = changedListenerList.beginBroadcast();
         for (int i = 0; i < count; i++) {
             OnBookListChangedListener listener = changedListenerList.getBroadcastItem(i);

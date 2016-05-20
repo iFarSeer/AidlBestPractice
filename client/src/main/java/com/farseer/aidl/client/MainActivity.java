@@ -1,3 +1,19 @@
+/*
+ *    Copyright 2016 ifarseer
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package com.farseer.aidl.client;
 
 import android.content.ComponentName;
@@ -15,7 +31,7 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.farseer.aidl.Book;
+import com.farseer.aidl.DevBook;
 import com.farseer.aidl.IBookManager;
 import com.farseer.aidl.OnBookListChangedListener;
 import com.farseer.aidl.ServiceIntentConvertor;
@@ -53,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private OnBookListChangedListener changedListener = new OnBookListChangedListener.Stub() {
 
         @Override
-        public void onBookListChanged(Book book) throws RemoteException {
+        public void onBookListChanged(DevBook book) throws RemoteException {
             Log.i(TAG, "onBookListChanged:book = " + book.toString());
         }
     };
@@ -120,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.addBook)
     public void addBook() {
         int bookId = random.nextInt(1000);
-        Book book = new Book(bookId, getString(R.string.format_book_name, bookId));
+        DevBook book = new DevBook(bookId, getString(R.string.format_book_name, bookId));
 
         try {
             if (bookManager != null) {
@@ -140,10 +156,10 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             if (bookManager != null) {
-                List<Book> bookList = bookManager.getBookList();
+                List<DevBook> bookList = bookManager.getBookList();
 
                 if (bookList != null) {
-                    for (Book book : bookList) {
+                    for (DevBook book : bookList) {
                         Log.i(TAG, book.toString());
                     }
                 }
