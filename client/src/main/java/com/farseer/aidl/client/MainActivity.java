@@ -1,28 +1,22 @@
 package com.farseer.aidl.client;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-
 import com.farseer.aidl.Book;
 import com.farseer.aidl.IBookManager;
 import com.farseer.aidl.OnBookListChangedListener;
 import com.farseer.aidl.ServiceIntentConvertor;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.List;
 import java.util.Random;
@@ -126,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 bookManager.addBook(book);
             }
         } catch (RemoteException e) {
-            e.printStackTrace();
             Log.e(TAG, "addBook failed");
         }
     }
@@ -145,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
             Log.e(TAG, "getBookList failed");
         }
     }
@@ -160,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 0);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -172,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 bookManager.registerChangedListener(changedListener);
             }
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -183,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 bookManager.unregisterChangedListener(changedListener);
             }
         } catch (RemoteException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 }

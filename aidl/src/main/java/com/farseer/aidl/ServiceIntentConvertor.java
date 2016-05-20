@@ -20,8 +20,6 @@ public class ServiceIntentConvertor {
     /**
      * 把Implicit的Intent转化为Explicit的Intent
      *
-     * @param context
-     * @param implicitIntent
      * @return intent
      */
     public static Intent convertImplicitExplicitIntent(Context context, Intent implicitIntent) {

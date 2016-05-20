@@ -5,6 +5,10 @@
  */
 package com.farseer.aidl.service;
 
+import com.farseer.aidl.Book;
+import com.farseer.aidl.IBookManager;
+import com.farseer.aidl.OnBookListChangedListener;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -13,10 +17,6 @@ import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
-import com.farseer.aidl.Book;
-import com.farseer.aidl.IBookManager;
-import com.farseer.aidl.OnBookListChangedListener;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -82,7 +82,7 @@ public class RemoteBookService extends Service {
             try {
                 listener.onBookListChanged(book);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
         }
 
