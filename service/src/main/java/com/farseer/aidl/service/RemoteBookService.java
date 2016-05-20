@@ -3,6 +3,7 @@
  * Copyright (c) 2016 hujiang Co.Ltd. All right reserved(http://www.hujiang.com).
  * 
  */
+
 package com.farseer.aidl.service;
 
 import com.farseer.aidl.Book;
@@ -81,8 +82,8 @@ public class RemoteBookService extends Service {
             OnBookListChangedListener listener = changedListenerList.getBroadcastItem(i);
             try {
                 listener.onBookListChanged(book);
-            } catch (RemoteException e) {
-                Log.e(TAG, e.getMessage());
+            } catch (RemoteException exception) {
+                Log.e(TAG, exception.getMessage());
             }
         }
 
