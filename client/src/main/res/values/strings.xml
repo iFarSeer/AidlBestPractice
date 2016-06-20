@@ -20,8 +20,8 @@
     <string name="text_add_book">Add Book</string>
     <string name="text_list_book">List Book</string>
     <string name="text_get_book">Get Book</string>
-    <string name="text_bind_service">Bind Service</string>
-    <string name="text_unbind_service">Unbind Service</string>
+    <string name="text_set_up">Setup</string>
+    <string name="text_dispose">Dispose</string>
 
     <string name="format_book_name">client的第%1$d本书</string>
 </resources>

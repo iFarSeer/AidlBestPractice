@@ -14,25 +14,19 @@
  *    limitations under the License.
  */
 
-package com.farseer.aidl;
+package com.farseer.aidl.client.remote;
 
 /**
  * class description
  *
  * @author zhaosc
  * @version 1.0.0
- * @since 16/5/20
+ * @since 16/6/20
  */
-public class ResultCode {
+public class RemoteConstant {
 
 
-    public static final int RESPONSE_RESULT_OK = 0;
-    public static final int RESPONSE_RESULT_SERVICE_UNAVAILABLE = 1;
+    public static int ERROR_SETUP_SUCCESS = -1000;
+    public static int ERROR_SETUP_EXCEPTION = -1001;
 
-    public static final int GET_BOOK_SUCCESS = 0;
-    public static final int GET_BOOK_NONE = 1;
-    public static final int GET_BOOK_EMPTY_LIST = 2;
-
-    public static final int SEARCH_BOOK_SUCCESS = 0;
-    public static final int SEARCH_BOOK_FAILED = 1;
 }

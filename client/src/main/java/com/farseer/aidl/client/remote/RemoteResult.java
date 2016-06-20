@@ -14,25 +14,36 @@
  *    limitations under the License.
  */
 
-package com.farseer.aidl;
+package com.farseer.aidl.client.remote;
+
+import android.text.TextUtils;
 
 /**
  * class description
  *
  * @author zhaosc
  * @version 1.0.0
- * @since 16/5/20
+ * @since 16/6/20
  */
-public class ResultCode {
+public class RemoteResult {
+    private int response;
+    private String description;
+
+    public RemoteResult(int response, String description) {
+        this.response = response;
+        this.description = description;
+    }
+
+    public int getResponse() {
+        return response;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
 
-    public static final int RESPONSE_RESULT_OK = 0;
-    public static final int RESPONSE_RESULT_SERVICE_UNAVAILABLE = 1;
-
-    public static final int GET_BOOK_SUCCESS = 0;
-    public static final int GET_BOOK_NONE = 1;
-    public static final int GET_BOOK_EMPTY_LIST = 2;
-
-    public static final int SEARCH_BOOK_SUCCESS = 0;
-    public static final int SEARCH_BOOK_FAILED = 1;
+    public String toString() {
+        return "RemoteResult: " + getDescription();
+    }
 }

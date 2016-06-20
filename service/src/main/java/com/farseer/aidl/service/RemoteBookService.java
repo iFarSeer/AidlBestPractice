@@ -16,6 +16,7 @@
 
 package com.farseer.aidl.service;
 
+import android.text.TextUtils;
 import com.farseer.aidl.*;
 
 import android.app.Service;
@@ -26,7 +27,9 @@ import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import com.farseer.aidl.service.tool.LogTool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -47,15 +50,45 @@ public class RemoteBookService extends Service {
 
     private Binder binder = new IBookManager.Stub() {
 
+
+        @Override
+        public int setup() throws RemoteException {
+
+            return ResultCode.RESPONSE_RESULT_OK;
+        }
+
+        @Override
+        public void searchBook(String filter, OnSearchBookCallback callback) throws RemoteException {
+            List<DevBook> result = new ArrayList<>();
+
+            if (TextUtils.isEmpty(filter)) {
+                result.addAll(bookList);
+                callback.onSuccess(result);
+                return;
+            }
+
+            for (DevBook book : bookList) {
+                if (!TextUtils.isEmpty(book.getBookName()) && book.getBookName().contains(filter)) {
+                    result.add(book);
+                }
+            }
+
+            if (result.size() != 0) {
+                callback.onSuccess(result);
+            } else {
+                callback.onFailed(ResultCode.SEARCH_BOOK_FAILED);
+            }
+        }
+
         @Override
         public List<DevBook> getBookList() throws RemoteException {
-            Log.i(TAG, "getBookList success");
+            LogTool.debug(TAG, "getBookList success");
             return bookList;
         }
 
         @Override
         public void addBook(DevBook book) throws RemoteException {
-            Log.i(TAG, "addBook book = " + book.toString());
+            LogTool.debug(TAG, "addBook book = " + book.toString());
             bookList.add(book);
             notifyChanged(book);
         }
@@ -113,7 +146,7 @@ public class RemoteBookService extends Service {
             }
         }
 
-        Log.i(TAG, "changedListenerList.size = " + count);
+        LogTool.debug(TAG, "changedListenerList.size = " + count);
         changedListenerList.finishBroadcast();
     }
 }
