@@ -22,11 +22,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 import com.farseer.aidl.*;
 import com.farseer.aidl.client.tool.LogTool;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +35,6 @@ import java.util.List;
  * @since 16/6/20
  */
 public class RemoteBookHelper {
-
 
     private static final String BOOK_MANAGER_ACTION = "com.farseer.aidl.service.RemoteBookService";
     private static final String BOOK_MANAGER_PACKAGE = "com.farseer.aidl.service";
@@ -145,10 +142,21 @@ public class RemoteBookHelper {
         bookManager = null;
     }
 
-    public void addBook(DevBook book) {
-        checkNotDisposed();
-        checkSetupDone("addBook");
+    private boolean isReady() {
+        try {
+            checkNotDisposed();
+            checkSetupDone("isReady");
+        } catch (IllegalStateException e) {
+            LogTool.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 
+    public void addBook(DevBook book) {
+        if (!isReady()) {
+            return;
+        }
         try {
             if (bookManager != null) {
                 bookManager.addBook(book);
@@ -159,7 +167,11 @@ public class RemoteBookHelper {
         }
     }
 
-    public void getBook(int bookId, final OnRequestBookListener requestBookListener){
+    public void getBook(int bookId, final OnRequestBookListener requestBookListener) {
+        if (!isReady()) {
+            requestBookListener.onSuccess(ResultCode.RESPONSE_RESULT_CLIENT_NOT_READY, null);
+            return;
+        }
         try {
             if (bookManager != null) {
                 OnRequestBookCallback callback = new OnRequestBookCallback.Stub() {
@@ -188,8 +200,20 @@ public class RemoteBookHelper {
     }
 
     public void searchBook(String filter, final OnSearchBookListener searchBookListener) {
-        checkNotDisposed();
-        checkSetupDone("searchBook");
+        if (!isReady()) {
+            searchBookListener.onSuccess(ResultCode.RESPONSE_RESULT_CLIENT_NOT_READY, null);
+            return;
+        }
+
+        try {
+            checkNotDisposed();
+            checkSetupDone("searchBook");
+        } catch (IllegalStateException e) {
+            LogTool.error(e.getMessage());
+            searchBookListener.onSuccess(ResultCode.RESPONSE_RESULT_CLIENT_NOT_READY, null);
+            return;
+        }
+
         try {
             if (bookManager != null) {
                 bookManager.searchBook(filter, new OnSearchBookCallback.Stub() {
@@ -242,14 +266,14 @@ public class RemoteBookHelper {
     private void bindService(OnSetupFinishedListener setupFinishedListener) {
         Intent intent = new Intent(BOOK_MANAGER_ACTION);
 //        intent.setPackage(BOOK_MANAGER_PACKAGE);
-        Intent serviceIntent = new Intent(ServiceIntentConvertor.convertImplicitExplicitIntent(context, intent));
-        if (!context.getPackageManager().queryIntentServices(serviceIntent, 0).isEmpty()) {
+        Intent explicitIntent = ServiceIntentConvertor.convertImplicitExplicitIntent(context, intent);
+        if (explicitIntent != null) {
             //绑定服务
-            context.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            context.bindService(explicitIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         } else {
             // 未查找到对应的服务
             if (setupFinishedListener != null) {
-                setupFinishedListener.onSetupFinished(new RemoteResult(ResultCode.RESPONSE_RESULT_SERVICE_UNAVAILABLE, "IBookManager is unavailable on device."));
+                setupFinishedListener.onSetupFinished(new RemoteResult(RemoteConstant.ERROR_SETUP_UNAVAILABLE, "IBookManager is unavailable on device."));
             }
         }
     }

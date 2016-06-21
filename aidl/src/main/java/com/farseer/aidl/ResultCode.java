@@ -27,7 +27,7 @@ public class ResultCode {
 
 
     public static final int RESPONSE_RESULT_OK = 0;
-    public static final int RESPONSE_RESULT_SERVICE_UNAVAILABLE = 1;
+    public static final int RESPONSE_RESULT_CLIENT_NOT_READY = 1;
 
     public static final int GET_BOOK_SUCCESS = 0;
     public static final int GET_BOOK_NONE = 1;

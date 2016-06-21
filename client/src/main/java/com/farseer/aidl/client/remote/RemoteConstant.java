@@ -28,5 +28,6 @@ public class RemoteConstant {
 
     public static int ERROR_SETUP_SUCCESS = -1000;
     public static int ERROR_SETUP_EXCEPTION = -1001;
+    public static int ERROR_SETUP_UNAVAILABLE = -1002;
 
 }

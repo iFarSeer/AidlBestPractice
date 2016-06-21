@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.afollestad.materialdialogs.DialogAction;
@@ -36,6 +37,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.farseer.aidl.DevBook;
 import com.farseer.aidl.ResultCode;
 import com.farseer.aidl.client.remote.RemoteBookHelper;
+import com.farseer.aidl.client.remote.RemoteConstant;
 import com.farseer.aidl.client.remote.RemoteResult;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -70,10 +72,8 @@ public class MainActivity extends BaseActivity {
         initView();
 
         remoteBookHelper = new RemoteBookHelper(this);
-
         setup();
     }
-
 
     @Override
     protected void onDestroy() {
@@ -127,14 +127,19 @@ public class MainActivity extends BaseActivity {
         remoteBookHelper.setup(new RemoteBookHelper.OnSetupFinishedListener() {
             @Override
             public void onSetupFinished(RemoteResult result) {
-                filterBookList("");
 
-                remoteBookHelper.registerDataChangeListener(new RemoteBookHelper.OnDataChangeListener() {
-                    @Override
-                    public void onChanged(DevBook devBook) {
-                        filterBookList("");
-                    }
-                });
+                if(RemoteConstant.ERROR_SETUP_SUCCESS == result.getResponse()) {
+                    Toast.makeText(MainActivity.this, R.string.setup_success, Toast.LENGTH_LONG).show();
+                    filterBookList("");
+                    remoteBookHelper.registerDataChangeListener(new RemoteBookHelper.OnDataChangeListener() {
+                        @Override
+                        public void onChanged(DevBook devBook) {
+                            filterBookList("");
+                        }
+                    });
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.setup_failed, result.getDescription()), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -228,15 +233,11 @@ public class MainActivity extends BaseActivity {
         remoteBookHelper.getBook(bookId, new RemoteBookHelper.OnRequestBookListener() {
             @Override
             public void onSuccess(int response, DevBook book) {
-
+                if (ResultCode.RESPONSE_RESULT_CLIENT_NOT_READY == response) {
+                    Toast.makeText(MainActivity.this, R.string.client_not_ready, Toast.LENGTH_LONG).show();
+                }
             }
         });
-    }
-
-    //搜索Book.
-    private void searchBook() {
-        String filter = "第";
-        filterBookList(filter);
     }
 
     private void filterBookList(String filter) {
@@ -246,24 +247,14 @@ public class MainActivity extends BaseActivity {
                 if (ResultCode.SEARCH_BOOK_SUCCESS == response) {
                     MainActivity.this.bookList = bookList;
                     recyclerAdapter.notifyDataSetChanged();
-                    if (bookList != null) {
-                        for (DevBook book : bookList) {
-                            Log.i(TAG, book.toString());
-                        }
-                    }
+                } else if (ResultCode.RESPONSE_RESULT_CLIENT_NOT_READY == response) {
+                    Toast.makeText(MainActivity.this, R.string.client_not_ready, Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
     class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-
-        private View.OnClickListener onClickListener;
-        private View.OnLongClickListener onLongClickListener;
-
-        public void setOnClickListener(View.OnClickListener onClickListener) {
-            this.onClickListener = onClickListener;
-        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -275,11 +266,9 @@ public class MainActivity extends BaseActivity {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final DevBook item = bookList.get(position);
 
-
             holder.nameTextView.setText(item.getBookName());
             holder.descriptionTextView.setText(item.getBookName());
             holder.itemView.setTag(item);
-            holder.itemView.setOnClickListener(onClickListener);
         }
 
         @Override
