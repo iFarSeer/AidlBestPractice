@@ -17,9 +17,13 @@
 package com.farseer.aidl.client;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +31,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.farseer.aidl.DevBook;
 import com.farseer.aidl.ResultCode;
 import com.farseer.aidl.client.remote.RemoteBookHelper;
@@ -51,6 +57,8 @@ public class MainActivity extends BaseActivity {
     private RecyclerAdapter recyclerAdapter;
 
     private List<DevBook> bookList = null;
+
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,21 +88,24 @@ public class MainActivity extends BaseActivity {
         setFirstActionImageView(toolbar, R.drawable.action_more, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                hideDialog();
+                showAboutDialog();
             }
         });
 
         setSecondActionImageView(toolbar, R.drawable.action_filter, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                hideDialog();
+                showFilterDialog();
             }
         });
 
         setThirdActionImageView(toolbar, R.drawable.action_add, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                hideDialog();
+                showAddDialog();
             }
         });
 
@@ -117,8 +128,81 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onSetupFinished(RemoteResult result) {
                 filterBookList("");
+
+                remoteBookHelper.registerDataChangeListener(new RemoteBookHelper.OnDataChangeListener() {
+                    @Override
+                    public void onChanged(DevBook devBook) {
+                        filterBookList("");
+                    }
+                });
             }
         });
+    }
+
+
+    //显示About对话框
+    private void showAboutDialog() {
+        materialDialog = new MaterialDialog.Builder(this)
+                .title(R.string.action_about)
+                .content(Html.fromHtml(getString(R.string.about_content)))
+                .contentLineSpacing(1.6f)
+                .build();
+        materialDialog.show();
+    }
+
+
+    private void showAddDialog() {
+        View customView = LayoutInflater.from(this).inflate(R.layout.dialog_book_add, null);
+        final AppCompatEditText editText = ButterKnife.findById(customView, R.id.inputEditText);
+
+        materialDialog = new MaterialDialog.Builder(this)
+                .customView(customView, false)
+                .positiveColorRes(R.color.positive_color)
+                .negativeColorRes(R.color.positive_color)
+                .positiveText(R.string.action_sure)
+                .negativeText(R.string.action_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String name = editText.getText().toString();
+                        addBook(name);
+                    }
+                })
+                .build();
+
+
+        materialDialog.show();
+    }
+
+    private void showFilterDialog() {
+        View customView = LayoutInflater.from(this).inflate(R.layout.dialog_book_filter, null);
+        final AppCompatEditText editText = ButterKnife.findById(customView, R.id.inputEditText);
+
+        materialDialog = new MaterialDialog.Builder(this)
+                .customView(customView, false)
+                .positiveColorRes(R.color.positive_color)
+                .negativeColorRes(R.color.positive_color)
+                .positiveText(R.string.action_sure)
+                .negativeText(R.string.action_cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String filter = editText.getText().toString();
+                        filterBookList(filter);
+                    }
+                })
+                .build();
+
+
+        materialDialog.show();
+    }
+
+    //隐藏对话框
+    private void hideDialog() {
+        if (materialDialog != null) {
+            materialDialog.dismiss();
+            materialDialog = null;
+        }
     }
 
     //解绑服务.
@@ -129,9 +213,12 @@ public class MainActivity extends BaseActivity {
     }
 
     //添加Book.
-    private void addBook() {
+    private void addBook(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return;
+        }
         int bookId = random.nextInt(1000);
-        DevBook book = new DevBook(bookId, getString(R.string.format_book_name, bookId));
+        DevBook book = new DevBook(bookId, name);
         remoteBookHelper.addBook(book);
     }
 
