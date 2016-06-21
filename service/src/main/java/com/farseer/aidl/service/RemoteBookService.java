@@ -52,9 +52,11 @@ public class RemoteBookService extends Service {
 
 
         @Override
-        public int setup() throws RemoteException {
-
-            return ResultCode.RESPONSE_RESULT_OK;
+        public int setup(String appId, String secret, int version) throws RemoteException {
+            //ifarseer TODO 此处采取本地简单的验证,生产环境可以采取服务端验证
+            int response = check(appId, secret, version);
+            //ifarseer TODO 当ResultCode.RESPONSE_RESULT_OK == response 时,可以异步处理些本地的初始化工作
+            return response;
         }
 
         @Override
@@ -148,5 +150,18 @@ public class RemoteBookService extends Service {
 
         LogTool.debug(TAG, "changedListenerList.size = " + count);
         changedListenerList.finishBroadcast();
+    }
+
+    private int check(String appId, String secret, int version) {
+        if (TextUtils.isEmpty(appId)) {
+            return ResultCode.RESPONSE_RESULT_INVALID_APPID;
+        }
+        if (TextUtils.isEmpty(secret)) {
+            return ResultCode.RESPONSE_RESULT_INVALID_SECRET;
+        }
+        if (version < 1) {
+            return ResultCode.RESPONSE_RESULT_NOT_SUPPORT_VERSION;
+        }
+        return ResultCode.RESPONSE_RESULT_OK;
     }
 }

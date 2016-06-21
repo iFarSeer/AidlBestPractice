@@ -21,20 +21,9 @@ package com.farseer.aidl;
  *
  * @author zhaosc
  * @version 1.0.0
- * @since 16/5/20
+ * @since 16/6/21
  */
-public class ResultCode {
+public class AidlConstant {
 
-    public static final int RESPONSE_RESULT_OK = 0;
-    public static final int RESPONSE_RESULT_INVALID_APPID = 1;
-    public static final int RESPONSE_RESULT_INVALID_SECRET = 2;
-    public static final int RESPONSE_RESULT_NOT_SUPPORT_VERSION = 3;
-    public static final int RESPONSE_RESULT_CLIENT_NOT_READY = 4;
-
-    public static final int GET_BOOK_SUCCESS = 0;
-    public static final int GET_BOOK_NONE = 1;
-    public static final int GET_BOOK_EMPTY_LIST = 2;
-
-    public static final int SEARCH_BOOK_SUCCESS = 0;
-    public static final int SEARCH_BOOK_FAILED = 1;
+    public static final int VERSION = -1;
 }

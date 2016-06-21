@@ -11,7 +11,7 @@ interface IBookManager {
 
     List<DevBook> getBookList();
 
-    int setup();
+    int setup(String appId, String secret, int version);
 
     void addBook(in DevBook book);
 

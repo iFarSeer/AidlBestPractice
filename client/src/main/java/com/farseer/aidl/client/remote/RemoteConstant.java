@@ -25,6 +25,7 @@ package com.farseer.aidl.client.remote;
  */
 public class RemoteConstant {
 
+    public static final String SECRET = "secret";
 
     public static int ERROR_SETUP_SUCCESS = -1000;
     public static int ERROR_SETUP_EXCEPTION = -1001;

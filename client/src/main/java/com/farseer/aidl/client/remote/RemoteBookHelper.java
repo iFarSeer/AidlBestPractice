@@ -23,6 +23,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import com.farseer.aidl.*;
+import com.farseer.aidl.client.BuildConfig;
 import com.farseer.aidl.client.tool.LogTool;
 
 import java.util.List;
@@ -104,10 +105,10 @@ public class RemoteBookHelper {
                     LogTool.debug("setup for IBookManager");
 
                     // setup for IBookManager
-                    int response = bookManager.setup();
+                    int response = bookManager.setup(BuildConfig.APPLICATION_ID, RemoteConstant.SECRET, AidlConstant.VERSION);
                     if (response != ResultCode.RESPONSE_RESULT_OK) {
                         if (setupFinishedListener != null) {
-                            setupFinishedListener.onSetupFinished(new RemoteResult(response, "IBookManager setup failed"));
+                            setupFinishedListener.onSetupFinished(getSetupResult(response));
                         }
                         return;
                     }
@@ -309,6 +310,20 @@ public class RemoteBookHelper {
             LogTool.error("Illegal state for operation (" + operation + "): IBookManager is not set up.");
             throw new IllegalStateException("IBookManager is not set up. Can't perform operation: " + operation);
         }
+    }
+
+    private RemoteResult getSetupResult(int response) {
+        RemoteResult result = null;
+        if (response == ResultCode.RESPONSE_RESULT_OK) {
+            result = new RemoteResult(response, "IBookManager setup successful");
+        } else if (response == ResultCode.RESPONSE_RESULT_INVALID_APPID) {
+            result = new RemoteResult(response, "IBookManager invalid appId");
+        } else if (response == ResultCode.RESPONSE_RESULT_INVALID_SECRET) {
+            result = new RemoteResult(response, "IBookManager invalid secret");
+        } else if (response == ResultCode.RESPONSE_RESULT_NOT_SUPPORT_VERSION) {
+            result = new RemoteResult(response, "IBookManager is not support your sdk's version");
+        }
+        return result;
     }
 
 }
