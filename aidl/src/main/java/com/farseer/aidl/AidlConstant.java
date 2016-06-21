@@ -25,5 +25,5 @@ package com.farseer.aidl;
  */
 public class AidlConstant {
 
-    public static final int VERSION = -1;
+    public static final int VERSION = 1;
 }
