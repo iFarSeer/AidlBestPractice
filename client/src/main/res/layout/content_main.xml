@@ -25,41 +25,9 @@
               app:layout_behavior="@string/appbar_scrolling_view_behavior"
               tools:context="com.farseer.aidl.client.MainActivity"
               tools:showIn="@layout/activity_main">
-
-    <Button
-            android:id="@+id/setup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/text_set_up"/>
-
-    <Button
-            android:id="@+id/dispose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/text_dispose"/>
-
-    <Button
-            android:id="@+id/addBook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/text_add_book"/>
-
-    <Button
-            android:id="@+id/searchBook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/text_list_book"/>
-
-    <Button
-            android:id="@+id/getBook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/text_get_book"/>
-
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 </LinearLayout>

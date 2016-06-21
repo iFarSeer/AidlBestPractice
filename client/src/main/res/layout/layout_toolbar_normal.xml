@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~    Copyright 2016 ifarseer
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:theme="@style/AppTheme.AppBarOverlay">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:layout_marginStart="-20dp"
+            android:layout_marginLeft="-20dp">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/gap_margin"
+                    android:layout_marginStart="@dimen/gap_margin"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/toolbar_text_size"
+                    android:textColor="@color/white_color"
+                    tools:text="@string/app_name"/>
+
+            <RelativeLayout
+                    android:id="@+id/rFirstActionView"
+                    android:layout_width="@dimen/toolbar_height"
+                    android:layout_height="@dimen/toolbar_height"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/bg_action_toolbar"
+                    android:visibility="gone">
+                <ImageView
+                        android:id="@+id/rFirstActionImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@android:drawable/ic_menu_more"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                    android:id="@+id/rSecondActionView"
+                    android:layout_width="@dimen/toolbar_height"
+                    android:layout_height="@dimen/toolbar_height"
+                    android:background="@drawable/bg_action_toolbar"
+                    android:layout_toLeftOf="@id/rFirstActionView"
+                    android:layout_toStartOf="@id/rFirstActionView"
+                    android:visibility="gone">
+                <ImageView
+                        android:id="@+id/rSecondActionImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@android:drawable/ic_menu_more"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                    android:id="@+id/rThirdView"
+                    android:layout_width="@dimen/toolbar_height"
+                    android:layout_height="@dimen/toolbar_height"
+                    android:layout_toLeftOf="@id/rSecondActionView"
+                    android:layout_toStartOf="@id/rSecondActionView"
+                    android:background="@drawable/bg_action_toolbar"
+                    android:visibility="gone">
+                <ImageView
+                        android:id="@+id/rThirdImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@android:drawable/ic_menu_more"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+</android.support.design.widget.AppBarLayout>
