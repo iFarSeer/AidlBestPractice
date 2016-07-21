@@ -1,10 +1,10 @@
-// OnRequestBookCallback.aidl
+// OnBuyBookCallback.aidl
 package com.farseer.aidl;
 
 import com.farseer.aidl.DevBook;
 // Declare any non-default types here with import statements
 
-interface OnRequestBookCallback {
+interface OnBuyBookCallback {
     /**
      * Demonstrates some basic types that you can use as parameters
      * and return values in AIDL.

@@ -52,11 +52,16 @@ public class RemoteBookService extends Service {
 
 
         @Override
-        public int setup(String appId, String secret, int version) throws RemoteException {
+        public void setup(String appId, String secret, int version, OnSetupCallback callback) throws RemoteException {
             //ifarseer TODO 此处采取本地简单的验证,生产环境可以采取服务端验证
             int response = check(appId, secret, version);
             //ifarseer TODO 当ResultCode.RESPONSE_RESULT_OK == response 时,可以异步处理些本地的初始化工作
-            return response;
+            callback.onResult(response);
+        }
+
+        @Override
+        public void buyBook(int bookId, OnBuyBookCallback callback) throws RemoteException {
+
         }
 
         @Override

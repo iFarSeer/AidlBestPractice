@@ -104,15 +104,22 @@ public class RemoteBookHelper {
                 try {
                     LogTool.debug("setup for IBookManager");
 
-                    // setup for IBookManager
-                    int response = bookManager.setup(BuildConfig.APPLICATION_ID, RemoteConstant.SECRET, AidlConstant.VERSION);
-                    if (response != ResultCode.RESPONSE_RESULT_OK) {
-                        if (setupFinishedListener != null) {
-                            setupFinishedListener.onSetupFinished(getSetupResult(response));
+                    OnSetupCallback.Stub setupCallback = new OnSetupCallback.Stub() {
+
+                        @Override
+                        public void onResult(int code) throws RemoteException {
+                            if (code != ResultCode.RESPONSE_RESULT_OK) {
+                                if (setupFinishedListener != null) {
+                                    setupFinishedListener.onSetupFinished(getSetupResult(code));
+                                }
+                                return;
+                            }
+                            isSetupDone = true;
                         }
-                        return;
-                    }
-                    isSetupDone = true;
+                    };
+                    // setup for IBookManager
+                    bookManager.setup(BuildConfig.APPLICATION_ID, RemoteConstant.SECRET, AidlConstant.VERSION, setupCallback);
+
                 } catch (RemoteException re) {
                     if (setupFinishedListener != null) {
                         setupFinishedListener.onSetupFinished(new RemoteResult(RemoteConstant.ERROR_SETUP_EXCEPTION, "RemoteException while setting up IBookManager."));
@@ -133,7 +140,7 @@ public class RemoteBookHelper {
     public void dispose() {
         LogTool.debug("Disposing.");
         isSetupDone = false;
-        if (serviceConnection != null) {
+        if (bookManager != null && serviceConnection != null) {
             LogTool.debug("Unbinding from service.");
             if (context != null) context.unbindService(serviceConnection);
         }
